@@ -26,9 +26,10 @@ name = "fft_spectrum_bench"
 harness = false
 
 [dependencies]
+diagnosticism = { path = "../../forks/Diagnosticism.Rust" }
 float-cmp = "~0.10.0"
 libm = "~0.2.7"
-microfft = { version = "~0.6.0", features = ["size-32768"] }
+microfft = { path = "../../forks/microfft-rs", features = ["size-32768"] }
 paste = "~1.0.14"
 
 [dev-dependencies]
@@ -36,7 +37,7 @@ audio-visualizer = "~0.4.0"
 minimp3 = "~0.5.1"
 
 # Additional dependencies for: examples
-cpal = "~0.15.2"
+cpal = { path = "../../forks/cpal" }
 ctrlc = "~3.4.0"
 ringbuffer = "~0.15.0"
 
