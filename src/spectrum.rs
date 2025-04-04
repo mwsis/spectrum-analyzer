@@ -44,7 +44,7 @@ use alloc::vec::Vec;
 /// function which creates objects of this struct!
 ///
 /// This struct can be shared across thread boundaries.
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct FrequencySpectrum {
     /// All (Frequency, FrequencyValue) data pairs sorted by lowest frequency
     /// to the highest frequency.Vector is sorted from lowest
@@ -531,6 +531,92 @@ impl FrequencySpectrum {
         self.max = max;
         self.average = average;
         self.median = median;
+    }
+}
+
+impl std::fmt::Debug for FrequencySpectrum {
+    fn fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+    ) -> std::fmt::Result {
+
+        let as_alternate = f.alternate();
+
+        if as_alternate {
+            const N : usize = 16;
+
+            write!(f, "{} {{", type_name_only!(Self))?;
+
+            f.write_str("\n    ")?;
+
+            write!(f, "data [{}]: [", self.data.len())?;
+
+            f.write_str("\n        ")?;
+            f.write_str(&"freq   : value          ".repeat(N - 1))?;
+            f.write_str( "freq   : value")?;
+
+            f.write_str("\n        ")?;
+
+            for i in 0..self.data.len() {
+
+                if 0 != i && 0 == i % N {
+
+                    f.write_str("\n        ")?;
+                } else {
+                    if 0 != i {
+
+                        f.write_str(" ")?;
+                    }
+                }
+
+                let a : f32 = self.data[i].0.val();
+                let b : f32 = self.data[i].1.val();
+
+                write!(f, "{a:7.1}:{b:.12},")?;
+            }
+
+            f.write_str("\n    ")?;
+
+            f.write_str("]")?;
+
+            f.write_str("\n    ")?;
+
+            write!(f, "frequency_resolution: {:#?},", &self.frequency_resolution)?;
+
+            f.write_str("\n    ")?;
+
+            write!(f, "samples_len: {:#?},", &self.samples_len)?;
+
+            f.write_str("\n    ")?;
+
+            write!(f, "average: {:#?},", &self.average)?;
+
+            f.write_str("\n    ")?;
+
+            write!(f, "median: {:#?},", &self.median)?;
+
+            f.write_str("\n    ")?;
+
+            write!(f, "min: {:#?},", &self.min)?;
+
+            f.write_str("\n    ")?;
+
+            write!(f, "max: {:#?},", &self.max)?;
+
+            f.write_str("\n}")?;
+
+            Ok(())
+        } else {
+            f.debug_struct(type_name_only!(Self))
+                .field("data", &self.data)
+                .field("frequency_resolution", &self.frequency_resolution)
+                .field("samples_len", &self.samples_len)
+                .field("average", &self.average)
+                .field("median", &self.median)
+                .field("min", &self.min)
+                .field("max", &self.max)
+                .finish()
+        }
     }
 }
 

@@ -33,7 +33,7 @@ microfft = { path = "../../forks/microfft-rs", features = ["size-32768"] }
 paste = "~1.0.14"
 
 [dev-dependencies]
-audio-visualizer = "~0.4.0"
+audio-visualizer = { path = "../../forks/audio-visualizer" }
 minimp3 = "~0.5.1"
 
 # Additional dependencies for: examples
