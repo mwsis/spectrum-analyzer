@@ -30,6 +30,8 @@ use crate::scaling::{SpectrumDataStats, SpectrumScalingFunction};
 use alloc::collections::BTreeMap;
 use alloc::vec::Vec;
 
+use diagnosticism::type_name_only;
+
 /// Convenient wrapper around the processed FFT result which describes each
 /// frequency and its value/amplitude from the analyzed samples.
 ///
@@ -572,7 +574,27 @@ impl std::fmt::Debug for FrequencySpectrum {
                 let a : f32 = self.data[i].0.val();
                 let b : f32 = self.data[i].1.val();
 
-                write!(f, "{a:7.1}:{b:.12},")?;
+                use std::io::IsTerminal as _;
+
+                if !std::io::stdout().is_terminal() {
+
+                    write!(f, "{a:7.1}:{b:.12},")?;
+                } else {
+
+                    if b > 2.0 * self.average.val() {
+
+                        if b > 5.0 * self.average.val() {
+
+                            write!(f, "\x1b[0;35;1m{a:7.1}:{b:.12}\x1b[0m,")?;
+                        } else {
+
+                            write!(f, "\x1b[0;36m{a:7.1}:{b:.12}\x1b[0m,")?;
+                        }
+                    } else {
+
+                        write!(f, "{a:7.1}:{b:.12},")?;
+                    }
+                }
             }
 
             f.write_str("\n    ")?;
@@ -589,19 +611,19 @@ impl std::fmt::Debug for FrequencySpectrum {
 
             f.write_str("\n    ")?;
 
-            write!(f, "average: {:#?},", &self.average)?;
+            write!(f, "average: {:.12},", &self.average.val())?;
 
             f.write_str("\n    ")?;
 
-            write!(f, "median: {:#?},", &self.median)?;
+            write!(f, "median: {:.12},", &self.median.val())?;
 
             f.write_str("\n    ")?;
 
-            write!(f, "min: {:#?},", &self.min)?;
+            write!(f, "min: {:7.1}:{:.12},", &self.min.0.val(), &self.min.1.val())?;
 
             f.write_str("\n    ")?;
 
-            write!(f, "max: {:#?},", &self.max)?;
+            write!(f, "max: {:7.1}:{:.12},", &self.max.0.val(), &self.max.1.val())?;
 
             f.write_str("\n}")?;
 

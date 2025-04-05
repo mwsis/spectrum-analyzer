@@ -49,3 +49,6 @@ rand = "0.8.5"
 # Faster code in tests, otherwise FFT is too slow
 [profile.dev]
 opt-level = 1
+
+[features]
+no_no_std = []

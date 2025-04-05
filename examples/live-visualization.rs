@@ -29,6 +29,12 @@ use spectrum_analyzer::{samples_fft_to_spectrum, FrequencyLimit, FrequencyValue}
 use std::cell::RefCell;
 use std::cmp::max;
 
+use diagnosticism::{
+    filelinefunction,
+    function_name_only,
+    diagnostics::now,
+};
+
 /// Example that creates a live visualization of the frequency spectrum of realtime audio data
 /// **Execute this with `--release`, otherwise it is very laggy!**.
 fn main() {
@@ -52,6 +58,8 @@ fn main() {
             Some(&divide_by_N),
         )
         .unwrap();
+
+        eprintln!("{}: latest_spectrum={:#?}", now(), &latest_spectrum);
 
         // now smoothen the spectrum; old values are decreased a bit and replaced,
         // if the new value is higher

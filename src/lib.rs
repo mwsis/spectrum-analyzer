@@ -71,7 +71,7 @@ SOFTWARE.
 #![deny(missing_docs)]
 #![deny(missing_debug_implementations)]
 #![deny(rustdoc::all)]
-#![no_std]
+#![cfg_attr(all(not(feature = "no_no_std"), test), no_std)]
 
 #[cfg_attr(test, macro_use)]
 #[cfg(test)]
@@ -89,6 +89,13 @@ use crate::error::SpectrumAnalyzerError;
 use crate::fft::{Complex32, FftImpl};
 use crate::scaling::SpectrumScalingFunction;
 use alloc::vec::Vec;
+
+use diagnosticism::{
+    filelinefunction,
+    function_name_only,
+    diagnostics::now,
+};
+use std::eprintln;
 
 pub mod error;
 mod fft;
